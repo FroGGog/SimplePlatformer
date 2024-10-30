@@ -3,11 +3,6 @@
 
 Scene::Scene(const std::string name) : m_scene_name(name) {}
 
-Scene::Scene()
-{
-	m_scene_name = "DEFAULT";
-}
-
 void Scene::registerAction(Action action)
 {
 	m_keys.push_back(action);
@@ -15,15 +10,11 @@ void Scene::registerAction(Action action)
 
 void Scene::doAction(sf::Keyboard::Key key, bool status)
 {
-
 	for (auto& action : m_keys) {
 		if (action.keyCode() == key) {
 			action.setStatus(status);
 		}
-		std::cout << action.status() << '\n';
 	}
-	
-
 }
 
 const std::string& Scene::name() const
@@ -35,24 +26,38 @@ const std::string& Scene::name() const
 
 MainMenu::MainMenu(const std::string name) : Scene(name)
 {
-	registerAction(Action(sf::Keyboard::Space));
-	registerAction(Action(sf::Keyboard::A));
+	registerAction(Action(sf::Keyboard::W));
+	registerAction(Action(sf::Keyboard::S));
 
+	auto e = entManager.addEntity(TAG::TILE);
+	e->addComponent<CBoundingBox>(sf::Vector2f{ 150.f, 150.f });
 }
 
-MainMenu::MainMenu() : Scene() {}
-
-void MainMenu::sRender()
+void MainMenu::sRender(sf::RenderTarget& target)
 {
-
+	for (auto& e : entManager.getAllByTag(TAG::TILE)) {
+		target.draw(e->getComponent<CBoundingBox>().b_shape);
+	}
 }
 
 void MainMenu::sDoAction(Action action)
 {
+	if (action.keyCode() == sf::Keyboard::W && action.status()) {
+		auto e = entManager.addEntity(TAG::TILE);
+		e->addComponent<CBoundingBox>(sf::Vector2f{ (float)(rand() % 900), (float)(rand() % 600) });
+	}
+	else if (action.keyCode() == sf::Keyboard::S && action.status()) {
+
+	}
+
 
 }
 
 void MainMenu::update()
 {
-
+	for (auto& action : m_keys) 
+	{
+		sDoAction(action);
+	}
+	
 }

@@ -22,7 +22,7 @@ void GameEngine::Render()
 {
 	m_win->clear();
 
-	//Call currentScene->render()
+	CurrentScene->sRender(*m_win);
 
 	m_win->display();
 
@@ -32,6 +32,7 @@ void GameEngine::Update()
 {
 	UserInput();
 	//Call currentScence->update()
+	CurrentScene->update();
 
 }
 
@@ -50,7 +51,7 @@ void GameEngine::UserInput()
 			break;
 		case sf::Event::KeyReleased:
 			CurrentScene->doAction(evt.key.code, false);
-
+			break;
 		default:
 			break;
 		}

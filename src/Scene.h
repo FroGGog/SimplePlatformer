@@ -12,12 +12,12 @@ protected:
 
 	void registerAction(Action action);
 
+	virtual void sDoAction(Action action) = 0;
+
 public:
 	Scene(const std::string name);
-	Scene();
 
-	virtual void sRender() = 0;
-	virtual void sDoAction(Action action) = 0;
+	virtual void sRender(sf::RenderTarget& target) = 0;
 	virtual void update() = 0;
 
 	void doAction(sf::Keyboard::Key key, bool status);
@@ -30,13 +30,17 @@ public:
 class MainMenu : public Scene
 {
 
+private:
+
+	void sDoAction(Action action) override;
+
+	EntityManager entManager;
+
 public:
 
 	MainMenu(const std::string name);
-	MainMenu();
 
-	void sRender() override;
-	void sDoAction(Action action) override;
+	void sRender(sf::RenderTarget& target) override;
 	void update() override;
 	
 

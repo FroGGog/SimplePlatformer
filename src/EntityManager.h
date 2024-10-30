@@ -24,5 +24,4 @@ public:
 	std::shared_ptr<Entity> addEntity(const TAG& tag);
 	entitiesVec& getAllByTag(const TAG& tag);
 
-
 };
