@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Assigment2 LANGUAGES CXX)
+project(Assigment3 LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraires" OFF)
@@ -38,48 +38,34 @@ FetchContent_MakeAvailable(imgui-sfml)
 set(SOURCE_FILES
 
     "src/main.cpp"
+    
+    "src/Components.h"
 
-    "src/Vec2.cpp"
-    "src/Vec2.h"
-
-    "src/Entity.cpp"
     "src/Entity.h"
-    
-    "src/Game.cpp"
-    "src/Game.h"
-    
-    "src/EntityManager.cpp"
+    "src/Entity.cpp"
+
     "src/EntityManager.h"
-    
-    "src/Components.h")
+    "src/EntityManager.cpp"
 
-add_executable(Assigment2 ${SOURCE_FILES})
-target_link_libraries(Assigment2 PRIVATE sfml-graphics)
-target_link_libraries(Assigment2 PRIVATE ImGui-SFML::ImGui-SFML)
-target_compile_features(Assigment2 PRIVATE cxx_std_17)
+    "src/GameEngine.h"
+    "src/GameEngine.cpp"
 
-# Add config file
-set(CONFIG_FILE "${CMAKE_SOURCE_DIR}/src/config.txt")
+    "src/Scene.h"
+    "src/Scene.cpp"
 
-add_custom_command(TARGET Assigment2 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${CONFIG_FILE} $<TARGET_FILE_DIR:Assigment2>
-    COMMENT "Copying CONFIG_FILE file to output directory"
-)
+    "src/Action.h"
+    "src/Action.cpp")
 
-# Add fonts
-# Dirs to font
-set(FONT_FILE "${CMAKE_SOURCE_DIR}/BrownieStencil-8O8MJ.ttf")
+add_executable(Assigment3 ${SOURCE_FILES})
+target_link_libraries(Assigment3 PRIVATE sfml-graphics)
+target_link_libraries(Assigment3 PRIVATE ImGui-SFML::ImGui-SFML)
+target_compile_features(Assigment3 PRIVATE cxx_std_17)
 
-# Copy font file to build dir
-add_custom_command(TARGET Assigment2 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:Assigment2>
-    COMMENT "Copying font file to output directory"
-)
 
 if(WIN32)
     add_custom_command(
-        TARGET Assigment2
+        TARGET Assigment3
         COMMENT "Copy OpenAL DLL"
-        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:Assigment2>
+        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:Assigment3>
         VERBATIM)
 endif()
