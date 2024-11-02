@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include <string>
 
 struct CBoundingBox {
 
@@ -17,4 +17,19 @@ struct CBoundingBox {
 
 	}
 	CBoundingBox() {};
+};
+
+struct CText {
+
+	sf::Text text;
+	std::string placeHolder;
+
+	CText(std::string text_, sf::Font& font, int ch_size) {
+
+		text.setFont(font);
+		text.setString(text_);
+		text.setCharacterSize(ch_size);
+
+	}
+
 };

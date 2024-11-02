@@ -1,7 +1,13 @@
 #include "Scene.h"
 #include "iostream"
+#include "GameEngine.h"
 
-Scene::Scene(const std::string name) : m_scene_name(name) {}
+Scene::Scene(const std::string name, GameEngine* gameEngine) : m_scene_name(name), m_gameEngine(gameEngine) {};
+
+Scene::~Scene()
+{
+	m_gameEngine = nullptr;
+}
 
 void Scene::registerAction(Action action)
 {
@@ -24,32 +30,36 @@ const std::string& Scene::name() const
 
 //Main menu scene
 
-MainMenu::MainMenu(const std::string name) : Scene(name)
+MainMenu::MainMenu(const std::string name, GameEngine* gameEngine) : Scene(name, gameEngine)
 {
 	registerAction(Action(sf::Keyboard::W));
 	registerAction(Action(sf::Keyboard::S));
 
-	auto e = entManager.addEntity(TAG::TILE);
-	e->addComponent<CBoundingBox>(sf::Vector2f{ 150.f, 150.f });
 }
 
 void MainMenu::sRender(sf::RenderTarget& target)
 {
-	for (auto& e : entManager.getAllByTag(TAG::TILE)) {
-		target.draw(e->getComponent<CBoundingBox>().b_shape);
+	for (auto& e : entManager.getAllByTag(TAG::TEXT)) {
+		target.draw(e->getComponent<CText>().text);
 	}
 }
 
 void MainMenu::sDoAction(Action action)
 {
 	if (action.keyCode() == sf::Keyboard::W && action.status()) {
-		auto e = entManager.addEntity(TAG::TILE);
-		e->addComponent<CBoundingBox>(sf::Vector2f{ (float)(rand() % 900), (float)(rand() % 600) });
+		
 	}
 	else if (action.keyCode() == sf::Keyboard::S && action.status()) {
-
+		
 	}
 
+
+}
+
+void MainMenu::init()
+{
+	auto start_t = entManager.addEntity(TAG::TEXT);
+	start_t->addComponent<CText>("START", )
 
 }
 

@@ -54,13 +54,27 @@ set(SOURCE_FILES
     "src/Scene.cpp"
 
     "src/Action.h"
-    "src/Action.cpp")
+    "src/Action.cpp"
+
+    "src/Assets.h"
+    "src/Assets.cpp"
+)
 
 add_executable(Assigment3 ${SOURCE_FILES})
 target_link_libraries(Assigment3 PRIVATE sfml-graphics)
 target_link_libraries(Assigment3 PRIVATE ImGui-SFML::ImGui-SFML)
 target_compile_features(Assigment3 PRIVATE cxx_std_17)
 
+
+# Add fonts
+# Dirs to font
+set(FONT_FILE "${CMAKE_SOURCE_DIR}/src/assets/menu.ttf")
+
+# Copy font file to build dir
+add_custom_command(TARGET Assigment3 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:Assigment3>
+    COMMENT "Copying font file to output directory"
+)
 
 if(WIN32)
     add_custom_command(

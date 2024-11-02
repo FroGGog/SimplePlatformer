@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Assets.h"
 
 class GameEngine {
 
@@ -9,6 +10,8 @@ private:
 	sf::Event evt;
 
 	std::shared_ptr<Scene> CurrentScene;
+
+	Assets assets;
 
 	bool m_running;
 
@@ -24,5 +27,5 @@ public:
 
 	const bool isOpen() const;
 	const std::shared_ptr<sf::RenderWindow> window() const;
-
+	const Assets& getAssets();
 };

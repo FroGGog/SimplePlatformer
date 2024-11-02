@@ -7,8 +7,7 @@ void GameEngine::init()
 
 	m_win = std::make_shared<sf::RenderWindow>(vidMode, "Mario", sf::Style::Titlebar | sf::Style::Close);
 
-	CurrentScene = std::make_shared<MainMenu>("MainMenu");
-
+	CurrentScene = std::make_shared<MainMenu>("MainMenu", this);
 	
 }
 
@@ -66,4 +65,9 @@ const bool GameEngine::isOpen() const
 const std::shared_ptr<sf::RenderWindow> GameEngine::window() const
 {
 	return m_win;
+}
+
+const Assets& GameEngine::getAssets()
+{
+	return assets;
 }

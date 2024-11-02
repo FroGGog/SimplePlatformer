@@ -4,7 +4,7 @@
 
 typedef std::tuple<CBoundingBox> ComponentsTuple;
 
-enum class TAG {DEFAULT, BACK_TILE, TILE };
+enum class TAG {DEFAULT, BACK_TILE, TILE, TEXT};
 
 class Entity {
 
