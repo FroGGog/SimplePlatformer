@@ -5,6 +5,12 @@ EntityManager::EntityManager()
 	m_ent_num = 0;
 }
 
+void EntityManager::clear()
+{
+	m_entmap.clear();
+	m_entvec.clear();
+}
+
 std::shared_ptr<Entity> EntityManager::addEntity(const TAG& tag)
 {
 	auto& e = std::make_shared<Entity>( m_ent_num, tag );

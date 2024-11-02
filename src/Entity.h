@@ -2,7 +2,7 @@
 
 #include "Components.h"
 
-typedef std::tuple<CBoundingBox> ComponentsTuple;
+typedef std::tuple<CBoundingBox, CText> ComponentsTuple;
 
 enum class TAG {DEFAULT, BACK_TILE, TILE, TEXT};
 

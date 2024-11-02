@@ -16,6 +16,7 @@ private:
 	bool m_running;
 
 	void init();
+	void initAssets();
 	void UserInput();
 
 public:
@@ -27,5 +28,5 @@ public:
 
 	const bool isOpen() const;
 	const std::shared_ptr<sf::RenderWindow> window() const;
-	const Assets& getAssets();
+	Assets& getAssets();
 };

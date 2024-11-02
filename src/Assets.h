@@ -5,14 +5,13 @@
 #include <iostream>
 
 #include "SFML/Graphics.hpp"
-#include "SFML/Audio.hpp"
+
 
 class Assets {
 
 private:
 
 	std::map<std::string, sf::Texture> m_textures;
-	std::map<std::string, sf::Sound> m_sounds;
 	std::map<std::string, sf::Font> m_fonts;
 
 public:

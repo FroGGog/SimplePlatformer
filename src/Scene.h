@@ -39,6 +39,9 @@ private:
 	void sDoAction(Action action) override;
 
 	EntityManager entManager;
+	
+	int choice;
+	int choiceCount;
 
 	void init();
 

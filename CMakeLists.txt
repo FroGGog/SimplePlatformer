@@ -72,7 +72,9 @@ set(FONT_FILE "${CMAKE_SOURCE_DIR}/src/assets/menu.ttf")
 
 # Copy font file to build dir
 add_custom_command(TARGET Assigment3 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:Assigment3>
+    # create directory in build dir
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:Assigment3>/fonts
+    COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:Assigment3>/fonts
     COMMENT "Copying font file to output directory"
 )
 

@@ -23,6 +23,7 @@ struct CText {
 
 	sf::Text text;
 	std::string placeHolder;
+	bool has = false;
 
 	CText(std::string text_, sf::Font& font, int ch_size) {
 
@@ -30,6 +31,9 @@ struct CText {
 		text.setString(text_);
 		text.setCharacterSize(ch_size);
 
+		has = true;
+
 	}
+	CText() {};
 
 };

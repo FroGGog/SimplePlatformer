@@ -11,9 +11,15 @@ void GameEngine::init()
 	
 }
 
+void GameEngine::initAssets()
+{
+	assets.addFont("MainMenu", "fonts/menu.ttf");
+}
+
 GameEngine::GameEngine()
 {
 	init();
+	initAssets();
 	m_running = true;
 }
 
@@ -67,7 +73,7 @@ const std::shared_ptr<sf::RenderWindow> GameEngine::window() const
 	return m_win;
 }
 
-const Assets& GameEngine::getAssets()
+Assets& GameEngine::getAssets()
 {
 	return assets;
 }
