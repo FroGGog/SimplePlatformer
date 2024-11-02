@@ -34,7 +34,7 @@ MainMenu::MainMenu(const std::string name, GameEngine* gameEngine) : Scene(name,
 {
 	registerAction(Action(sf::Keyboard::W));
 	registerAction(Action(sf::Keyboard::S));
-	registerAction(Action(sf::Keyboard::Space));
+	registerAction(Action(sf::Keyboard::Enter));
 
 	init();
 
@@ -79,6 +79,25 @@ void MainMenu::sDoAction(Action action)
 		e[choice - 1]->getComponent<CText>().text.setFillColor(sf::Color::White);
 	}
 
+	if (action.keyCode() == sf::Keyboard::Enter && action.status()) {
+		//clear all entities
+		entManager.clear();
+		switch (choice)
+		{
+		case 0:
+			//level picker screen
+			break;
+		case 1:
+			//options
+			break;
+		case 2:
+			//exit
+			m_gameEngine->SetRunning(false);
+			break;
+		default:
+			break;
+		}
+	}
 
 }
 
@@ -111,6 +130,16 @@ void MainMenu::init()
 	choice = 0;
 	choiceCount = 2;
 	
+}
+
+void MainMenu::initLevelPicker()
+{
+
+}
+
+void MainMenu::initOptions()
+{
+
 }
 
 void MainMenu::update()

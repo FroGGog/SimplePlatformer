@@ -41,6 +41,11 @@ void GameEngine::Update()
 
 }
 
+void GameEngine::SetRunning(bool rn)
+{
+	m_running = rn;
+}
+
 void GameEngine::UserInput()
 {
 	//recreate this with action class

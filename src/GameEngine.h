@@ -26,6 +26,8 @@ public:
 	void Render();
 	void Update();
 
+	void SetRunning(bool rn);
+
 	const bool isOpen() const;
 	const std::shared_ptr<sf::RenderWindow> window() const;
 	Assets& getAssets();

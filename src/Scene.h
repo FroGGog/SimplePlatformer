@@ -44,6 +44,8 @@ private:
 	int choiceCount;
 
 	void init();
+	void initLevelPicker();
+	void initOptions();
 
 public:
 
