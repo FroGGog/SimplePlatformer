@@ -37,3 +37,26 @@ struct CText {
 	CText() {};
 
 };
+
+struct CInput {
+
+	bool UP = false;
+	bool DOWN = false;
+	bool LEFT = false;
+	bool RIGHT = false;
+
+	bool has = false;
+
+	CInput() { has = true; };
+
+};
+
+struct CTansformable {
+
+	sf::Vector2f speed{ 0.f,0.f };
+
+	bool has = false;
+
+	CTansformable() { has = true; };
+
+};

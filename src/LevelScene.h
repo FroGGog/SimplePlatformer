@@ -12,6 +12,8 @@ private:
 	EntityManager entManager;
 	std::string m_fileName;
 
+	std::shared_ptr<Entity> m_player;
+
 	bool showGrid;
 
 	void regInputs();
@@ -19,8 +21,12 @@ private:
 
 	void initGrid();
 	void initLevel();
+	void initPlayer();
 
 	void renderGrid(sf::RenderTarget& target);
+	void renderLevel(sf::RenderTarget& target);
+	void renderPlayer(sf::RenderTarget& target);
+
 
 public:
 

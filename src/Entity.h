@@ -2,9 +2,9 @@
 
 #include "Components.h"
 
-typedef std::tuple<CBoundingBox, CText> ComponentsTuple;
+typedef std::tuple<CBoundingBox, CText, CInput, CTansformable> ComponentsTuple;
 
-enum class TAG {DEFAULT, BACK_TILE, TILE, TEXT, GRID};
+enum class TAG {DEFAULT, BACK_TILE, TILE, TEXT, GRID, PLAYER};
 
 class Entity {
 

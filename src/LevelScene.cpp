@@ -32,6 +32,8 @@ void Level::init()
 	regInputs();
 
 	initGrid();
+	initLevel();
+	initPlayer();
 }
 
 void Level::initGrid()
@@ -66,7 +68,20 @@ void Level::initGrid()
 void Level::initLevel()
 {
 	// Level will be created using .txt file
+	auto ent = m_entManager.addEntity(TAG::TILE);
 
+	ent->addComponent<CBoundingBox>(sf::Vector2f{ 64.f, 128.f });
+	ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 5, 64.f * 7 });
+
+}
+
+void Level::initPlayer()
+{
+	m_player = m_entManager.addEntity(TAG::PLAYER);
+
+	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 64.f,64.f });
+	m_player->addComponent<CInput>();
+	
 }
 
 void Level::renderGrid(sf::RenderTarget& target)
@@ -75,6 +90,21 @@ void Level::renderGrid(sf::RenderTarget& target)
 		target.draw(ent->getComponent<CBoundingBox>().b_shape);
 		target.draw(ent->getComponent<CText>().text);
 	}
+}
+
+void Level::renderLevel(sf::RenderTarget& target)
+{
+	for (auto& ent : m_entManager.getAllByTag(TAG::TILE)) {
+
+		target.draw(ent->getComponent<CBoundingBox>().b_shape);
+
+	}
+
+}
+
+void Level::renderPlayer(sf::RenderTarget& target)
+{
+	target.draw(m_player->getComponent<CBoundingBox>().b_shape);
 }
 
 void Level::sDoAction(Action action)
@@ -91,6 +121,32 @@ void Level::sDoAction(Action action)
 		showGrid = !showGrid;
 	}
 
+	if (action.keyCode() == sf::Keyboard::D && action.status()) {
+
+		m_player->getComponent<CTansformable>().speed.x = 10.f;
+	}
+	else if (action.keyCode() == sf::Keyboard::A && action.status()) {
+		
+		m_player->getComponent<CTansformable>().speed.x = -10.f;
+	}
+	else {
+		m_player->getComponent<CTansformable>().speed.x = 0.f;
+	}
+
+	if (action.keyCode() == sf::Keyboard::W && action.status()) {
+
+		m_player->getComponent<CTansformable>().speed.y = -10.f;
+	}
+	else if (action.keyCode() == sf::Keyboard::S && action.status()) {
+
+		m_player->getComponent<CTansformable>().speed.y = 10.f;
+	}
+	else {
+		m_player->getComponent<CTansformable>().speed.y = 0.f;
+	}
+
+	m_player->getComponent<CBoundingBox>().b_shape.move(m_player->getComponent<CTansformable>().speed);
+
 }
 
 void Level::sRender(sf::RenderTarget& target)
@@ -98,6 +154,8 @@ void Level::sRender(sf::RenderTarget& target)
 	if (showGrid) {
 		renderGrid(target);
 	}
+	renderLevel(target);
+	renderPlayer(target);
 }
 
 void Level::update()
@@ -110,5 +168,6 @@ void Level::update()
 		sDoAction(action);
 		action.setStatus(false);
 	}
+	
 
 }

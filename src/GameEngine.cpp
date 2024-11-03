@@ -51,10 +51,12 @@ void GameEngine::ChangeScene(std::string sceneName)
 {
 	if (sceneName == "MainMenu") {
 		CurrentScene = std::make_shared<MainMenu>("MainMenu", this);
+		m_win->setFramerateLimit(10);
 	}
 	else if (sceneName == "Level") {
 		std::cout << "Changed scene\n";
 		CurrentScene = std::make_shared<Level>("Level1", this, "/src");
+		m_win->setFramerateLimit(60);
 	}
 }
 
