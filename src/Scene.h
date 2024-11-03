@@ -47,13 +47,38 @@ private:
 	void initLevelPicker();
 	void initOptions();
 
+	std::shared_ptr<Entity> m_savedEnt;
+
 public:
 
 	MainMenu(const std::string name, GameEngine* gameEngine);
+	~MainMenu();
 
 	void sRender(sf::RenderTarget& target) override;
 	void update() override;
 	
+};
 
+
+class Level : public Scene {
+
+private:
+
+	void sDoAction(Action action) override;
+
+	EntityManager entManager;
+	std::string m_fileName;
+
+	void regInputs();
+	void init();
+
+	void initGrid();
+
+public:
+
+	Level(const std::string name, GameEngine* gameEngine, const std::string fileName);
+
+	void sRender(sf::RenderTarget& target) override;
+	void update() override;
 
 };

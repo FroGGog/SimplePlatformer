@@ -7,7 +7,7 @@ void GameEngine::init()
 
 	m_win = std::make_shared<sf::RenderWindow>(vidMode, "Mario", sf::Style::Titlebar | sf::Style::Close);
 
-	CurrentScene = std::make_shared<MainMenu>("MainMenu", this);
+	CurrentScene = std::make_shared<Level>("LEVEL 1", this, "src/");
 	
 }
 
@@ -44,6 +44,17 @@ void GameEngine::Update()
 void GameEngine::SetRunning(bool rn)
 {
 	m_running = rn;
+}
+
+void GameEngine::ChangeScene(std::string sceneName)
+{
+	if (sceneName == "MainMenu") {
+		CurrentScene = std::make_shared<MainMenu>("MainMenu", this);
+	}
+	else if (sceneName == "Level") {
+		std::cout << "Changed scene\n";
+		CurrentScene = std::make_shared<Level>("Level1", this, "/src");
+	}
 }
 
 void GameEngine::UserInput()

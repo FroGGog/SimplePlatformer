@@ -27,6 +27,7 @@ public:
 	void Update();
 
 	void SetRunning(bool rn);
+	void ChangeScene(std::string sceneName);
 
 	const bool isOpen() const;
 	const std::shared_ptr<sf::RenderWindow> window() const;
