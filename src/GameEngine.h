@@ -1,4 +1,5 @@
-#include "Scene.h"
+#include "LevelScene.h"
+#include "MainMenuScene.h"
 #include "Assets.h"
 
 class GameEngine {

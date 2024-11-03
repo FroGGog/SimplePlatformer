@@ -2,8 +2,8 @@
 
 void GameEngine::init()
 {
-	vidMode.width = 900;
-	vidMode.height = 600;
+	vidMode.width = 960;
+	vidMode.height = 640;
 
 	m_win = std::make_shared<sf::RenderWindow>(vidMode, "Mario", sf::Style::Titlebar | sf::Style::Close);
 
@@ -14,6 +14,7 @@ void GameEngine::init()
 void GameEngine::initAssets()
 {
 	assets.addFont("MainMenu", "fonts/menu.ttf");
+	assets.addFont("Grid", "fonts/grid.ttf");
 }
 
 GameEngine::GameEngine()
