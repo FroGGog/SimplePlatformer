@@ -1,8 +1,10 @@
 #include "Physics.h"
+#include "iostream"
 
 namespace Physics {
 
-	bool isColliding(sf::RectangleShape shape1, sf::RectangleShape shape2)
+	// This function is used for checking if two rectangle shapes is colliding with each other
+	bool isColliding(sf::RectangleShape& shape1, sf::RectangleShape& shape2)
 	{
 		sf::Vector2f pos_1 = shape1.getPosition();
 		float shape1_w = shape1.getGlobalBounds().width;
@@ -22,6 +24,23 @@ namespace Physics {
 		}
 		return false;
 	}
+
+	// TODO : need to create antorher version of this func to get square if collision in horizontal
+	float getCollSquare(sf::RectangleShape& shape1, sf::RectangleShape& shape2)
+	{
+		
+		float pos_1y = shape1.getPosition().y;
+		float shape1_h = shape1.getGlobalBounds().height;
+
+		float pos_2y = shape2.getPosition().y;
+		float shape2_h = shape2.getGlobalBounds().height;
+
+		return (shape1_h - (pos_1y + shape1_h - pos_2y + shape2_h));
+
+
+
+	}
+
 
 }
 

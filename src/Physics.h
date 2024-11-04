@@ -2,8 +2,9 @@
 
 namespace Physics {
 
-	bool isColliding(sf::RectangleShape shape1, sf::RectangleShape shape2);
+	bool isColliding(sf::RectangleShape& shape1, sf::RectangleShape& shape2);
 
+	float getCollSquare(sf::RectangleShape& shape1, sf::RectangleShape& shape2);
 }
 
 

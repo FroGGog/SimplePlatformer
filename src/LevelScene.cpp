@@ -179,14 +179,9 @@ void Level::updateCollision()
 
 			if (m_player->getComponent<CTransformable>().speed.y != 0) {
 
-				float y_player = m_player->getComponent<CBoundingBox>().b_shape.getPosition().y;
-				float h_player = m_player->getComponent<CBoundingBox>().b_shape.getGlobalBounds().height;
-
-				float y_ent = e->getComponent<CBoundingBox>().b_shape.getPosition().y;
-
-				float y_offset = y_player + h_player - y_ent;
+				float offset = Physics::getCollSquare(m_player->getComponent<CBoundingBox>().b_shape, e->getComponent<CBoundingBox>().b_shape);
 		
-				sf::Vector2f newPos{ m_player->getComponent<CBoundingBox>().b_shape.getPosition().x, y_player - y_offset };
+				sf::Vector2f newPos{ m_player->getComponent<CBoundingBox>().b_shape.getPosition().x, y_player + offset };
 				m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
 				m_player->getComponent<CTransformable>().speed.y = 0;
 
