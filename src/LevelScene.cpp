@@ -26,6 +26,7 @@ void Level::regInputs()
 void Level::init()
 {
 	showGrid = false;
+	deltaTime = 1.f / 60.f;
 
 	regInputs();
 
@@ -81,7 +82,7 @@ void Level::initPlayer()
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CTransformable>();
 	
-	m_player->getComponent<CTransformable>().speedLimit = 0.1f;
+	m_player->getComponent<CTransformable>().speedLimit = 1.f;
 	m_player->getComponent<CTransformable>().speed = sf::Vector2f{ 0.f,0.f };
 }
 
@@ -110,6 +111,39 @@ void Level::renderPlayer(sf::RenderTarget& target)
 
 void Level::updatePlayerSpeed()
 {
+	float& p_speedX = m_player->getComponent<CTransformable>().speed.x;
+
+	if (m_player->getComponent<CInput>().RIGHT) {
+
+		p_speedX = 1.5f * deltaTime;
+
+	}
+
+	if (m_player->getComponent<CInput>().LEFT) {
+
+		p_speedX = -1.5f * deltaTime ;
+
+	}
+
+	else {
+		if (p_speedX > 0) {
+			p_speedX -= 0.002f * deltaTime;
+			if (p_speedX <= 0) {
+				p_speedX = 0;
+			}
+		}
+
+		else if (p_speedX < 0) {
+
+			p_speedX += 0.002f * deltaTime;
+			if (p_speedX >= 0) {
+				p_speedX = 0;
+			}
+
+		}
+
+	}
+	std::cout << p_speedX << '\n';
 
 }
 
@@ -122,7 +156,6 @@ void Level::updatePlayerInput(Action action)
 	}
 	else if (action.keyCode() == sf::Keyboard::A) {
 		m_player->getComponent<CInput>().LEFT = action.status();
-		
 	}
 	
 }
@@ -165,10 +198,14 @@ void Level::update()
 			return;
 		}
 		sDoAction(action);
+		if (action.keyCode() == sf::Keyboard::G) {
+
+			action.setStatus(false);
+		}
 		
 	}
 	
-
+	updatePlayerSpeed();
 
 
 }

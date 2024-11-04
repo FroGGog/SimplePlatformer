@@ -15,6 +15,7 @@ private:
 	std::shared_ptr<Entity> m_player;
 
 	bool showGrid;
+	float deltaTime;
 
 	void regInputs();
 	void init();

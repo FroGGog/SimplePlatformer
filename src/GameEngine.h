@@ -10,6 +10,9 @@ private:
 	sf::VideoMode vidMode;
 	sf::Event evt;
 
+	sf::Clock time;
+	sf::Time deltaTime;
+
 	std::shared_ptr<Scene> CurrentScene;
 
 	Assets assets;

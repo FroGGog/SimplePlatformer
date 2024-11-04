@@ -32,10 +32,14 @@ void GameEngine::Render()
 
 	m_win->display();
 
+	deltaTime = time.getElapsedTime();
+
 }
 
 void GameEngine::Update()
 {
+	time.restart();
+
 	UserInput();
 	//Call currentScence->update()
 	CurrentScene->update();
