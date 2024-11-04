@@ -61,6 +61,10 @@ struct CTransformable {
 
 	bool has = false;
 
-	CTransformable() { has = true; };
+	CTransformable() 
+	{ 
+		has = true; 
+		speedLimit = 0.f;
+	};
 
 };

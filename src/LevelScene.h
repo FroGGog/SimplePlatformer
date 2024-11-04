@@ -30,6 +30,7 @@ private:
 
 	void updatePlayerSpeed();
 	void updatePlayerInput(Action action);
+	void updateCollision();
 
 public:
 

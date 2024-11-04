@@ -63,7 +63,13 @@ set(SOURCE_FILES
     "src/Action.cpp"
 
     "src/Assets.h"
-    "src/Assets.cpp")
+    "src/Assets.cpp"
+
+    "src/Physics.h"
+    "src/Physics.cpp"
+
+)
+
 
 add_executable(Assigment3 ${SOURCE_FILES})
 target_link_libraries(Assigment3 PRIVATE sfml-graphics)

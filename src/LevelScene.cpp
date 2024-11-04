@@ -1,6 +1,7 @@
 #include "LevelScene.h"
 #include "Scene.h"
 #include "GameEngine.h"
+#include "Physics.h"
 
 // all Level based stuff
 Level::Level(const std::string name, GameEngine* gameEngine, const std::string fileName)
@@ -79,6 +80,7 @@ void Level::initPlayer()
 	m_player = m_entManager.addEntity(TAG::PLAYER);
 
 	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 64.f,64.f });
+	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 2, 64.f * 7 });
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CTransformable>();
 	
@@ -143,7 +145,6 @@ void Level::updatePlayerSpeed()
 		}
 
 	}
-	std::cout << p_speedX << '\n';
 
 }
 
@@ -158,6 +159,25 @@ void Level::updatePlayerInput(Action action)
 		m_player->getComponent<CInput>().LEFT = action.status();
 	}
 	
+}
+
+void Level::updateCollision()
+{
+
+	for (auto& e : m_entManager.getAllByTag(TAG::TILE)) {
+
+		if (Physics::isColliding(m_player->getComponent<CBoundingBox>().b_shape, e->getComponent<CBoundingBox>().b_shape)) {
+
+			if (m_player->getComponent<CInput>().RIGHT) {
+
+				m_player->getComponent<CTransformable>().speed.x = 0;
+
+			}
+
+		}
+
+	}
+
 }
 
 void Level::sDoAction(Action action)
@@ -207,5 +227,6 @@ void Level::update()
 	
 	updatePlayerSpeed();
 
+	updateCollision();
 
 }
