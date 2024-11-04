@@ -70,8 +70,8 @@ void Level::initLevel()
 	// Level will be created using .txt file
 	auto ent = m_entManager.addEntity(TAG::TILE);
 
-	ent->addComponent<CBoundingBox>(sf::Vector2f{ 64.f, 128.f });
-	ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 5, 64.f * 7 });
+	ent->addComponent<CBoundingBox>(sf::Vector2f{ 640.f, 64.f });
+	ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f, 64.f * 7 });
 
 }
 
@@ -80,7 +80,7 @@ void Level::initPlayer()
 	m_player = m_entManager.addEntity(TAG::PLAYER);
 
 	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 64.f,64.f });
-	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 2, 64.f * 7 });
+	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 2, 64.f * 5 });
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CTransformable>();
 	
@@ -113,7 +113,11 @@ void Level::renderPlayer(sf::RenderTarget& target)
 
 void Level::updatePlayerSpeed()
 {
+
+	//speed on x side
+
 	float& p_speedX = m_player->getComponent<CTransformable>().speed.x;
+	float& p_speedY = m_player->getComponent<CTransformable>().speed.y;
 
 	if (m_player->getComponent<CInput>().RIGHT) {
 
@@ -146,6 +150,10 @@ void Level::updatePlayerSpeed()
 
 	}
 
+	// update gravity
+	p_speedY += 0.001f * deltaTime;
+	
+
 }
 
 void Level::updatePlayerInput(Action action)
@@ -168,9 +176,20 @@ void Level::updateCollision()
 
 		if (Physics::isColliding(m_player->getComponent<CBoundingBox>().b_shape, e->getComponent<CBoundingBox>().b_shape)) {
 
-			if (m_player->getComponent<CInput>().RIGHT) {
 
-				m_player->getComponent<CTransformable>().speed.x = 0;
+			if (m_player->getComponent<CTransformable>().speed.y != 0) {
+
+				float y_player = m_player->getComponent<CBoundingBox>().b_shape.getPosition().y;
+				float h_player = m_player->getComponent<CBoundingBox>().b_shape.getGlobalBounds().height;
+
+				float y_ent = e->getComponent<CBoundingBox>().b_shape.getPosition().y;
+
+				float y_offset = y_player + h_player - y_ent;
+		
+				sf::Vector2f newPos{ m_player->getComponent<CBoundingBox>().b_shape.getPosition().x, y_player - y_offset };
+				m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+				m_player->getComponent<CTransformable>().speed.y = 0;
+
 
 			}
 
