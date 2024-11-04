@@ -84,7 +84,7 @@ void Level::initPlayer()
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CTransformable>();
 	
-	m_player->getComponent<CTransformable>().speedLimit = 1.f;
+	m_player->getComponent<CTransformable>().speedLimit = 0.9f;
 	m_player->getComponent<CTransformable>().speed = sf::Vector2f{ 0.f,0.f };
 }
 
@@ -121,19 +121,27 @@ void Level::updatePlayerSpeed()
 
 	if (m_player->getComponent<CInput>().RIGHT) {
 
-		p_speedX = 1.5f * deltaTime;
+		p_speedX += 1.5f * deltaTime;
+		if (p_speedX > m_player->getComponent<CTransformable>().speedLimit) {
+			p_speedX = m_player->getComponent<CTransformable>().speedLimit;
+		}
 
 	}
 
 	if (m_player->getComponent<CInput>().LEFT) {
 
-		p_speedX = -1.5f * deltaTime ;
+		p_speedX += -1.5f * deltaTime ;
+
+		if (p_speedX < -m_player->getComponent<CTransformable>().speedLimit) {
+
+			p_speedX = -m_player->getComponent<CTransformable>().speedLimit;
+		}
 
 	}
 
 	else {
 		if (p_speedX > 0) {
-			p_speedX -= 0.002f * deltaTime;
+			p_speedX -= 1.f * deltaTime;
 			if (p_speedX <= 0) {
 				p_speedX = 0;
 			}
@@ -141,7 +149,7 @@ void Level::updatePlayerSpeed()
 
 		else if (p_speedX < 0) {
 
-			p_speedX += 0.002f * deltaTime;
+			p_speedX += 1.f * deltaTime;
 			if (p_speedX >= 0) {
 				p_speedX = 0;
 			}
@@ -151,8 +159,8 @@ void Level::updatePlayerSpeed()
 	}
 
 	// update gravity
-	p_speedY += 0.001f * deltaTime;
-	
+	p_speedY += 9.8f * deltaTime;
+
 
 }
 
@@ -179,9 +187,11 @@ void Level::updateCollision()
 
 			if (m_player->getComponent<CTransformable>().speed.y != 0) {
 
-				float offset = Physics::getCollSquare(m_player->getComponent<CBoundingBox>().b_shape, e->getComponent<CBoundingBox>().b_shape);
+				float y_player = m_player->getComponent<CBoundingBox>().b_shape.getPosition().y;
+
+				float test = Physics::getCollSquare(m_player->getComponent<CBoundingBox>().b_shape, e->getComponent<CBoundingBox>().b_shape);
 		
-				sf::Vector2f newPos{ m_player->getComponent<CBoundingBox>().b_shape.getPosition().x, y_player + offset };
+				sf::Vector2f newPos{ m_player->getComponent<CBoundingBox>().b_shape.getPosition().x, y_player + test };
 				m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
 				m_player->getComponent<CTransformable>().speed.y = 0;
 
@@ -200,7 +210,8 @@ void Level::sDoAction(Action action)
 	if (action.keyCode() == sf::Keyboard::Escape && action.status()) {
 
 		m_gameEngine->ChangeScene("MainMenu");
-
+		m_keys.clear();
+		return;
 	}
 
 	if (action.keyCode() == sf::Keyboard::G && action.status()) {
@@ -239,8 +250,14 @@ void Level::update()
 		
 	}
 	
-	updatePlayerSpeed();
+	if (m_keys.size() != 0) {
 
-	updateCollision();
+		updatePlayerSpeed();
+
+		updateCollision();
+
+	}
+
+
 
 }
