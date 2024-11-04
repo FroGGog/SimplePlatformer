@@ -51,12 +51,16 @@ struct CInput {
 
 };
 
-struct CTansformable {
+struct CTransformable {
 
 	sf::Vector2f speed{ 0.f,0.f };
 
+	sf::Vector2f decel{ 0.f, 0.f };
+
+	float speedLimit;
+
 	bool has = false;
 
-	CTansformable() { has = true; };
+	CTransformable() { has = true; };
 
 };

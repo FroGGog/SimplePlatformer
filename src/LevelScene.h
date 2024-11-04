@@ -27,6 +27,8 @@ private:
 	void renderLevel(sf::RenderTarget& target);
 	void renderPlayer(sf::RenderTarget& target);
 
+	void updatePlayerSpeed();
+	void updatePlayerInput(Action action);
 
 public:
 

@@ -11,8 +11,6 @@ Level::Level(const std::string name, GameEngine* gameEngine, const std::string f
 void Level::regInputs()
 {
 	//movement
-	registerAction(Action{ sf::Keyboard::W });
-	registerAction(Action{ sf::Keyboard::S });
 	registerAction(Action{ sf::Keyboard::A });
 	registerAction(Action{ sf::Keyboard::D });
 
@@ -81,7 +79,10 @@ void Level::initPlayer()
 
 	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 64.f,64.f });
 	m_player->addComponent<CInput>();
+	m_player->addComponent<CTransformable>();
 	
+	m_player->getComponent<CTransformable>().speedLimit = 0.1f;
+	m_player->getComponent<CTransformable>().speed = sf::Vector2f{ 0.f,0.f };
 }
 
 void Level::renderGrid(sf::RenderTarget& target)
@@ -107,6 +108,25 @@ void Level::renderPlayer(sf::RenderTarget& target)
 	target.draw(m_player->getComponent<CBoundingBox>().b_shape);
 }
 
+void Level::updatePlayerSpeed()
+{
+
+}
+
+void Level::updatePlayerInput(Action action)
+{
+
+	if (action.keyCode() == sf::Keyboard::D) {
+		m_player->getComponent<CInput>().RIGHT = action.status();
+		
+	}
+	else if (action.keyCode() == sf::Keyboard::A) {
+		m_player->getComponent<CInput>().LEFT = action.status();
+		
+	}
+	
+}
+
 void Level::sDoAction(Action action)
 {
 
@@ -121,31 +141,10 @@ void Level::sDoAction(Action action)
 		showGrid = !showGrid;
 	}
 
-	if (action.keyCode() == sf::Keyboard::D && action.status()) {
+	updatePlayerInput(action);
+	
 
-		m_player->getComponent<CTansformable>().speed.x = 10.f;
-	}
-	else if (action.keyCode() == sf::Keyboard::A && action.status()) {
-		
-		m_player->getComponent<CTansformable>().speed.x = -10.f;
-	}
-	else {
-		m_player->getComponent<CTansformable>().speed.x = 0.f;
-	}
-
-	if (action.keyCode() == sf::Keyboard::W && action.status()) {
-
-		m_player->getComponent<CTansformable>().speed.y = -10.f;
-	}
-	else if (action.keyCode() == sf::Keyboard::S && action.status()) {
-
-		m_player->getComponent<CTansformable>().speed.y = 10.f;
-	}
-	else {
-		m_player->getComponent<CTansformable>().speed.y = 0.f;
-	}
-
-	m_player->getComponent<CBoundingBox>().b_shape.move(m_player->getComponent<CTansformable>().speed);
+	m_player->getComponent<CBoundingBox>().b_shape.move(m_player->getComponent<CTransformable>().speed);
 
 }
 
@@ -166,8 +165,10 @@ void Level::update()
 			return;
 		}
 		sDoAction(action);
-		action.setStatus(false);
+		
 	}
 	
+
+
 
 }
