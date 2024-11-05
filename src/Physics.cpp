@@ -35,6 +35,8 @@ namespace Physics {
 		float pos_2y = shape2.getPosition().y;
 		float shape2_h = shape2.getGlobalBounds().height;
 
+
+
 		return (shape1_h - (pos_1y + shape1_h - pos_2y + shape2_h));
 
 

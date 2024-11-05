@@ -55,11 +55,10 @@ struct CTransformable {
 
 	sf::Vector2f speed{ 0.f,0.f };
 
-	sf::Vector2f decel{ 0.f, 0.f };
-
 	float speedLimit;
 
 	bool has = false;
+	bool onGround = false;
 
 	CTransformable() 
 	{ 

@@ -8,6 +8,7 @@ void GameEngine::init()
 	m_win = std::make_shared<sf::RenderWindow>(vidMode, "Mario", sf::Style::Titlebar | sf::Style::Close);
 
 	CurrentScene = std::make_shared<Level>("LEVEL 1", this, "src/");
+	//CurrentScene = std::make_shared<MainMenu>("MainMenu", this);
 	m_win->setFramerateLimit(60);
 	
 }
