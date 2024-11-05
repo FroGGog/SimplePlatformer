@@ -43,6 +43,28 @@ namespace Physics {
 
 	}
 
+	float getVertSquare(sf::RectangleShape& shape1, sf::RectangleShape& shape2)
+	{
+		float pos_1y = shape1.getPosition().y;
+		float shape1_h = shape1.getGlobalBounds().height;
+
+		float pos_2y = shape2.getPosition().y;
+		float shape2_h = shape2.getGlobalBounds().height;
+
+		if (pos_1y < pos_2y) {
+			return (sqrtf(powf((pos_1y + shape1_h), 2) - powf(pos_2y, 2)));
+		}
+		else if (pos_1y > pos_2y) {
+			return -(sqrtf(abs(powf(pos_1y, 2) - powf((pos_2y + shape2_h), 2))));
+		}
+		else{
+		
+			return 0;
+
+		}
+
+	}
+
 
 }
 

@@ -90,7 +90,7 @@ void Level::initPlayer()
 {
 	m_player = m_entManager.addEntity(TAG::PLAYER);
 
-	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 64.f,64.f });
+	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
 	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 2, 64.f * 6 });
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CTransformable>();
@@ -124,6 +124,9 @@ void Level::renderPlayer(sf::RenderTarget& target)
 
 void Level::updatePlayerSpeed()
 {
+	if (m_player->getComponent<CTransformable>().onGround) {
+		m_player->getComponent<CTransformable>().speed.y = 0.f;
+	}
 
 	//speed on x side
 
@@ -170,19 +173,15 @@ void Level::updatePlayerSpeed()
 	}
 
 	// update gravity
-	if (p_speedY == 0) {
-		m_player->getComponent<CTransformable>().onGround = true;
-	}
 
 
 	if (m_player->getComponent<CInput>().UP && m_player->getComponent<CTransformable>().onGround) {
+		m_player->getComponent<CTransformable>().onGround = false;
 		p_speedY = -125.f * deltaTime;
 	}
-	else {
+	else if(!m_player->getComponent<CTransformable>().onGround){
 		p_speedY += 9.8f * deltaTime;
 	}
-	
-
 
 }
 
@@ -199,7 +198,7 @@ void Level::updatePlayerInput(Action action)
 	
 	if (action.keyCode() == sf::Keyboard::W) {
 		m_player->getComponent<CInput>().UP = action.status();
-		m_player->getComponent<CTransformable>().onGround = false;
+		
 	}
 
 }
@@ -211,44 +210,38 @@ void Level::updateCollision()
 
 		if (Physics::isColliding(m_player->getComponent<CBoundingBox>().b_shape, e->getComponent<CBoundingBox>().b_shape)) {
 
-			float offset = Physics::getCollSquare(m_player->getComponent<CBoundingBox>().b_shape, e->getComponent<CBoundingBox>().b_shape);
+			auto& ent_player = m_player->getComponent<CBoundingBox>().b_shape;
 
+			auto& ent_shape = e->getComponent<CBoundingBox>().b_shape;
 			
+			std::cout << m_player->getComponent<CTransformable>().speed.y << '\n';
+
 			if (m_player->getComponent<CTransformable>().speed.y != 0) {
 
-				float y_player = m_player->getComponent<CBoundingBox>().b_shape.getPosition().y;
-				
-				std::cout << m_player->getComponent<CTransformable>().onGround << '\n';
+				float offset = Physics::getVertSquare(ent_player, ent_shape);
 
-				if (offset < -50.f) {
+				if (offset < 0 && !m_player->getComponent<CTransformable>().onGround) {
 
-					auto& ent_shape = e->getComponent<CBoundingBox>().b_shape;
+					sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y + ent_shape.getGlobalBounds().height };
 
-					sf::Vector2f newPos{ m_player->getComponent<CBoundingBox>().b_shape.getPosition().x,
-						ent_shape.getPosition().y + ent_shape.getGlobalBounds().height };
 					m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
 
 					m_player->getComponent<CTransformable>().speed.y = 9.8 * deltaTime;
 
 					m_player->getComponent<CTransformable>().onGround = false;
 				}
-				else {
+				else  {
 
-					sf::Vector2f newPos{ m_player->getComponent<CBoundingBox>().b_shape.getPosition().x, y_player + offset };
+					sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y - ent_player.getGlobalBounds().height};
 					m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
 					m_player->getComponent<CTransformable>().speed.y = 0;
 
 					m_player->getComponent<CTransformable>().onGround = true;
+
 				}
 				
 			}
-
-			if (m_player->getComponent<CInput>().RIGHT) {
-
-				std::cout << offset << '\n';
 				
-
-			}
 
 		}
 
