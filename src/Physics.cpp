@@ -25,24 +25,8 @@ namespace Physics {
 		return false;
 	}
 
-	// TODO : need to create antorher version of this func to get square if collision in horizontal
-	float getCollSquare(sf::RectangleShape& shape1, sf::RectangleShape& shape2)
-	{
-		
-		float pos_1y = shape1.getPosition().y;
-		float shape1_h = shape1.getGlobalBounds().height;
-
-		float pos_2y = shape2.getPosition().y;
-		float shape2_h = shape2.getGlobalBounds().height;
-
-
-
-		return (shape1_h - (pos_1y + shape1_h - pos_2y + shape2_h));
-
-
-
-	}
-
+	//return x > 0 if colliding by down side of shape
+	//return x < 0 if colliding by upper side of shape
 	float getVertSquare(sf::RectangleShape& shape1, sf::RectangleShape& shape2)
 	{
 		float pos_1y = shape1.getPosition().y;
@@ -59,6 +43,29 @@ namespace Physics {
 		}
 		else{
 		
+			return 0;
+
+		}
+
+	}
+
+	float getHorizSquare(sf::RectangleShape& shape1, sf::RectangleShape& shape2)
+	{
+	
+		float pos_1x = shape1.getPosition().x;
+		float shape1_w = shape1.getGlobalBounds().width;
+
+		float pos_2x = shape2.getPosition().x;
+		float shape2_w = shape2.getGlobalBounds().width;
+
+		if (pos_1x < pos_2x) {
+			return (sqrtf(powf((pos_1x + shape1_w), 2) - powf(pos_2x, 2)));
+		}
+		else if (pos_1x > pos_2x) {
+			return -(sqrtf(abs(powf(pos_1x, 2) - powf((pos_2x + shape2_w), 2))));
+		}
+		else {
+
 			return 0;
 
 		}

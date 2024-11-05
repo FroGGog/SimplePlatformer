@@ -213,36 +213,33 @@ void Level::updateCollision()
 			auto& ent_player = m_player->getComponent<CBoundingBox>().b_shape;
 
 			auto& ent_shape = e->getComponent<CBoundingBox>().b_shape;
-			
-			std::cout << m_player->getComponent<CTransformable>().speed.y << '\n';
 
-			if (m_player->getComponent<CTransformable>().speed.y != 0) {
+			float offset_y = Physics::getVertSquare(ent_player, ent_shape);
 
-				float offset = Physics::getVertSquare(ent_player, ent_shape);
+			if (offset_y < 0.f && !m_player->getComponent<CTransformable>().onGround) {
+					
+				std::cout << "CALL JUMP COLLISION\n";
 
-				if (offset < 0 && !m_player->getComponent<CTransformable>().onGround) {
+				sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y + ent_shape.getGlobalBounds().height };
 
-					sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y + ent_shape.getGlobalBounds().height };
+				m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
 
-					m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+				m_player->getComponent<CTransformable>().speed.y = 9.8 * deltaTime;
 
-					m_player->getComponent<CTransformable>().speed.y = 9.8 * deltaTime;
-
-					m_player->getComponent<CTransformable>().onGround = false;
-				}
-				else  {
-
-					sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y - ent_player.getGlobalBounds().height};
-					m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
-					m_player->getComponent<CTransformable>().speed.y = 0;
-
-					m_player->getComponent<CTransformable>().onGround = true;
-
-				}
-				
+				m_player->getComponent<CTransformable>().onGround = false;
 			}
-				
+			else if (offset_y > 0.f){
 
+				std::cout << "CALL GROUND COLLISION\n";
+
+				sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y - ent_player.getGlobalBounds().height };
+				m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+				m_player->getComponent<CTransformable>().speed.y = 0;
+
+				m_player->getComponent<CTransformable>().onGround = true;
+
+			}
+					
 		}
 
 	}
