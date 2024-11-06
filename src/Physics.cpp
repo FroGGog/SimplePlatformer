@@ -14,9 +14,9 @@ namespace Physics {
 		float shape2_w = shape2.getGlobalBounds().width;
 		float shape2_h = shape2.getGlobalBounds().height;
 
-		if (pos_1.x + shape1_w > pos_2.x && pos_1.y + shape1_h > pos_2.y) {
+		if (pos_1.x + shape1_w > pos_2.x && pos_1.x < pos_2.x + shape2_w ) {
 
-			if (pos_1.x < pos_2.x + shape2_w && pos_1.y < pos_2.y + shape2_h) {
+			if (pos_1.y + shape1_h > pos_2.y && pos_1.y < pos_2.y + shape2_h) {
 
 				return true;
 

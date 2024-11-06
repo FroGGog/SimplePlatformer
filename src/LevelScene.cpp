@@ -76,8 +76,13 @@ void Level::initLevel()
 
 	auto ent2 = m_entManager.addEntity(TAG::TILE);
 
-	ent2->addComponent<CBoundingBox>(sf::Vector2f{ 640.f, 64.f });
+	ent2->addComponent<CBoundingBox>(sf::Vector2f{ 320.f, 64.f });
 	ent2->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f, 64.f * 4 });
+
+	auto ent4 = m_entManager.addEntity(TAG::TILE);
+
+	ent4->addComponent<CBoundingBox>(sf::Vector2f{ 320.f, 64.f });
+	ent4->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 13, 64.f * 5 });
 
 	auto ent3 = m_entManager.addEntity(TAG::TILE);
 
@@ -205,18 +210,24 @@ void Level::updatePlayerInput(Action action)
 
 void Level::updateCollision()
 {
+	bool g_collide = false;
 
 	for (auto& e : m_entManager.getAllByTag(TAG::TILE)) {
 
 		if (Physics::isColliding(m_player->getComponent<CBoundingBox>().b_shape, e->getComponent<CBoundingBox>().b_shape)) {
+
+			g_collide = true;
 
 			auto& ent_player = m_player->getComponent<CBoundingBox>().b_shape;
 
 			auto& ent_shape = e->getComponent<CBoundingBox>().b_shape;
 
 			float offset_y = Physics::getVertSquare(ent_player, ent_shape);
+			float offset_x = Physics::getHorizSquare(ent_player, ent_shape);
 
-			if (offset_y < 0.f && !m_player->getComponent<CTransformable>().onGround) {
+			std::cout << offset_x << "  " << offset_y << '\n';
+
+			if (offset_y < 0.f && !m_player->getComponent<CTransformable>().onGround && offset_x < 0.f) {
 					
 				std::cout << "CALL JUMP COLLISION\n";
 
@@ -234,14 +245,31 @@ void Level::updateCollision()
 
 				sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y - ent_player.getGlobalBounds().height };
 				m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
-				m_player->getComponent<CTransformable>().speed.y = 0;
+				m_player->getComponent<CTransformable>().speed.y = 0.f;
 
 				m_player->getComponent<CTransformable>().onGround = true;
+
+			}
+
+			if (offset_x > 0.f && m_player->getComponent<CTransformable>().onGround) {
+
+				std::cout << "CALL RIGHT COLLISION\n";
+
+				sf::Vector2f newPos{ ent_shape.getPosition().x - ent_player.getGlobalBounds().width, ent_player.getPosition().y};
+
+				m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+
+				m_player->getComponent<CTransformable>().speed.y = 9.8 * deltaTime;
+
 
 			}
 					
 		}
 
+	}
+
+	if (!g_collide) {
+		m_player->getComponent<CTransformable>().onGround = false;
 	}
 
 }
