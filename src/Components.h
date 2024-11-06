@@ -11,7 +11,7 @@ struct CBoundingBox {
 
 		b_shape.setSize(size_);
 		b_shape.setFillColor(sf::Color{ 255,255,255,0 });
-		b_shape.setOutlineThickness(2.f);
+		b_shape.setOutlineThickness(1.f);
 
 		has = true;
 
