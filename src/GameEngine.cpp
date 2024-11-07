@@ -20,6 +20,7 @@ void GameEngine::initAssets()
 
 	assets.addTexture("MarioIDLE", "textures/MarioIDLE.png");
 	assets.addTexture("Brick", "textures/Brick.png");
+	assets.addTexture("Bush1", "textures/Bush1.png");
 }
 
 GameEngine::GameEngine()

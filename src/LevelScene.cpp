@@ -104,6 +104,14 @@ void Level::initLevel()
 
 	}
 
+	auto ent = m_entManager.addEntity(TAG::BACK_TILE);
+
+	ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("Bush1"), sf::Vector2f{ 2.f,2.f });
+
+	ent->getComponent<CSprite>().m_sprite.setOrigin(sf::Vector2f{ ent->getComponent<CSprite>().m_sprite.getPosition().x,
+		ent->getComponent<CSprite>().m_sprite.getPosition().y + ent->getComponent<CSprite>().m_sprite.getGlobalBounds().height });
+	ent->getComponent<CSprite>().m_sprite.setPosition(sf::Vector2f{32.f * 7, 32.f * 20.f + 5.f});
+
 
 }
 
@@ -142,6 +150,11 @@ void Level::renderLevel(sf::RenderTarget& target)
 		target.draw(ent->getComponent<CSprite>().m_sprite);
 	}
 
+	for (auto& ent : m_entManager.getAllByTag(TAG::BACK_TILE)) {
+
+		target.draw(ent->getComponent<CSprite>().m_sprite);
+
+	}
 }
 
 void Level::renderPlayer(sf::RenderTarget& target)
@@ -410,11 +423,14 @@ void Level::sDoAction(Action action)
 
 void Level::sRender(sf::RenderTarget& target)
 {
+	target.clear(sf::Color{ 92, 148, 252, 255 });
+
 	if (showGrid) {
 		renderGrid(target);
 	}
 	renderLevel(target);
 	renderPlayer(target);
+
 }
 
 void Level::update()
