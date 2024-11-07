@@ -70,25 +70,40 @@ void Level::initLevel()
 {
 	// Level will be created using .txt file
 
-	for (int i{ 0 }; i < 32; i++) {
+	for (int j{ 0 }; j < 2; j++) {
+
+		for (int i{ 0 }; i < 32; i++) {
+
+			auto ent = m_entManager.addEntity(TAG::TILE);
+
+			ent->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
+			ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("Brick"), sf::Vector2f{ 2.f,2.f });
+
+			ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * i, 32.f * (18.f + (float)j) });
+
+			ent->getComponent<CBoundingBox>().updateCenter();
+
+			ent->getComponent<CSprite>().m_sprite.setPosition(ent->getComponent<CBoundingBox>().center.x, ent->getComponent<CBoundingBox>().center.y - 1.f);
+
+		}
+
+	}
+
+	for (int i{ 0 }; i < 6; i++) {
 
 		auto ent = m_entManager.addEntity(TAG::TILE);
 
 		ent->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
 		ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("Brick"), sf::Vector2f{ 2.f,2.f });
 
-		ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * i, 32.f * 16 });
+		ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * (i + 2), 32.f * 15.f });
 
 		ent->getComponent<CBoundingBox>().updateCenter();
 
 		ent->getComponent<CSprite>().m_sprite.setPosition(ent->getComponent<CBoundingBox>().center.x, ent->getComponent<CBoundingBox>().center.y - 1.f);
 
 	}
-	
-	auto ent2 = m_entManager.addEntity(TAG::TILE);
 
-	ent2->addComponent<CBoundingBox>(sf::Vector2f{ 320.f, 32.f });
-	ent2->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * 10, 32.f * 6 });
 
 }
 
@@ -96,8 +111,9 @@ void Level::initPlayer()
 {
 	m_player = m_entManager.addEntity(TAG::PLAYER);
 
-	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
-	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * 1, 32.f * 6 });
+	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 26.f, 26.f });
+	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * 3, 32.f * 8 });
+	m_player->getComponent<CBoundingBox>().updateCenter();
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CTransformable>();
 	
@@ -105,6 +121,8 @@ void Level::initPlayer()
 	m_player->getComponent<CTransformable>().speed = sf::Vector2f{ 0.f,0.f };
 
 	m_player->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("MarioIDLE"), sf::Vector2f{ 2.f, 2.f });
+	m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center.x,
+		m_player->getComponent<CBoundingBox>().center.y - 1.f);
 	
 }
 
@@ -128,7 +146,7 @@ void Level::renderLevel(sf::RenderTarget& target)
 
 void Level::renderPlayer(sf::RenderTarget& target)
 {
-	//target.draw(m_player->getComponent<CBoundingBox>().b_shape);
+	target.draw(m_player->getComponent<CBoundingBox>().b_shape);
 	target.draw(m_player->getComponent<CSprite>().m_sprite);
 }
 
@@ -291,9 +309,7 @@ void Level::updateCollision()
 					
 		}
 
-		if ((jump && left) || (jump && right)) {
-			continue;
-		}
+		
 
 		if (jump) {
 
