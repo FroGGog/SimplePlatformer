@@ -1,10 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <iostream>
 
 struct CBoundingBox {
 
 	sf::RectangleShape b_shape;
+	sf::Vector2f center;
 	bool has = false;
 
 	CBoundingBox(sf::Vector2f size_) {
@@ -13,10 +15,43 @@ struct CBoundingBox {
 		b_shape.setFillColor(sf::Color{ 255,255,255,0 });
 		b_shape.setOutlineThickness(1.f);
 
+		center = sf::Vector2f{ b_shape.getPosition().x + b_shape.getGlobalBounds().width / 2,
+			b_shape.getPosition().y + b_shape.getGlobalBounds().height / 2 };
+
 		has = true;
 
 	}
+
+	void updateCenter() {
+
+		center = sf::Vector2f{ b_shape.getPosition().x + b_shape.getGlobalBounds().width / 2,
+			b_shape.getPosition().y + b_shape.getGlobalBounds().height / 2 };
+
+	};
+
 	CBoundingBox() {};
+};
+
+struct CSprite {
+
+	sf::Sprite m_sprite;
+
+	bool has = false;
+
+	bool right = true;
+
+	CSprite(sf::Texture& tex, sf::Vector2f scale = { 1.f,1.f }) {
+
+		m_sprite.setTexture(tex);
+
+		m_sprite.setOrigin(sf::Vector2f{ float(tex.getSize().x / 2), float(tex.getSize().y / 2)});
+
+		m_sprite.setScale(scale);
+
+		has = true;
+	}
+
+	CSprite() {  };
 };
 
 struct CText {
@@ -53,7 +88,7 @@ struct CInput {
 
 struct CTransformable {
 
-	sf::Vector2f speed{ 0.f,0.f };
+	sf::Vector2f speed{ 0.f,0.f };	
 
 	float speedLimit;
 

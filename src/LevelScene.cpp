@@ -45,17 +45,17 @@ void Level::initGrid()
 	unsigned pos_y = 0;
 	unsigned pos_x = 0;
 
-	for (unsigned collumn{ 0 }; collumn < x_size; collumn += 64) {
+	for (unsigned collumn{ 0 }; collumn < x_size; collumn += 32) {
 		
-		for (unsigned row{ 0 }; row < y_size; row += 64) {
+		for (unsigned row{ 0 }; row < y_size; row += 32) {
 
 			auto gridEnt = m_entManager.addEntity(TAG::GRID);
 
-			gridEnt->addComponent<CBoundingBox>(sf::Vector2f{ 64, 64 });
+			gridEnt->addComponent<CBoundingBox>(sf::Vector2f{ 32, 32 });
 			gridEnt->getComponent<CBoundingBox>().b_shape.setPosition(collumn, row);
 
 			gridEnt->addComponent<CText>("( " + std::to_string(pos_x) + " , " + std::to_string(pos_y) + " )",
-				m_gameEngine->getAssets().getFont("Grid"), 15);
+				m_gameEngine->getAssets().getFont("Grid"), 7);
 			auto& b_pos = gridEnt->getComponent<CBoundingBox>().b_shape.getPosition();
 			gridEnt->getComponent<CText>().text.setPosition(b_pos.x + 5.f, b_pos.y + 5.f);
 			pos_y++;
@@ -69,15 +69,26 @@ void Level::initGrid()
 void Level::initLevel()
 {
 	// Level will be created using .txt file
-	auto ent = m_entManager.addEntity(TAG::TILE);
 
-	ent->addComponent<CBoundingBox>(sf::Vector2f{ 704.f, 64.f });
-	ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f, 64.f * 7 });
+	for (int i{ 0 }; i < 32; i++) {
 
+		auto ent = m_entManager.addEntity(TAG::TILE);
+
+		ent->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
+		ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("Brick"), sf::Vector2f{ 2.f,2.f });
+
+		ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * i, 32.f * 16 });
+
+		ent->getComponent<CBoundingBox>().updateCenter();
+
+		ent->getComponent<CSprite>().m_sprite.setPosition(ent->getComponent<CBoundingBox>().center.x, ent->getComponent<CBoundingBox>().center.y - 1.f);
+
+	}
+	
 	auto ent2 = m_entManager.addEntity(TAG::TILE);
 
-	ent2->addComponent<CBoundingBox>(sf::Vector2f{ 320.f, 64.f });
-	ent2->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 2, 64.f * 6 });
+	ent2->addComponent<CBoundingBox>(sf::Vector2f{ 320.f, 32.f });
+	ent2->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * 10, 32.f * 6 });
 
 }
 
@@ -86,12 +97,15 @@ void Level::initPlayer()
 	m_player = m_entManager.addEntity(TAG::PLAYER);
 
 	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
-	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 64.f * 1, 64.f * 6 });
+	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * 1, 32.f * 6 });
 	m_player->addComponent<CInput>();
 	m_player->addComponent<CTransformable>();
 	
 	m_player->getComponent<CTransformable>().speedLimit = 0.9f;
 	m_player->getComponent<CTransformable>().speed = sf::Vector2f{ 0.f,0.f };
+
+	m_player->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("MarioIDLE"), sf::Vector2f{ 2.f, 2.f });
+	
 }
 
 void Level::renderGrid(sf::RenderTarget& target)
@@ -107,20 +121,33 @@ void Level::renderLevel(sf::RenderTarget& target)
 	for (auto& ent : m_entManager.getAllByTag(TAG::TILE)) {
 
 		target.draw(ent->getComponent<CBoundingBox>().b_shape);
-
+		target.draw(ent->getComponent<CSprite>().m_sprite);
 	}
 
 }
 
 void Level::renderPlayer(sf::RenderTarget& target)
 {
-	target.draw(m_player->getComponent<CBoundingBox>().b_shape);
+	//target.draw(m_player->getComponent<CBoundingBox>().b_shape);
+	target.draw(m_player->getComponent<CSprite>().m_sprite);
 }
 
 void Level::updatePlayerSpeed()
 {
 	if (m_player->getComponent<CTransformable>().onGround) {
 		m_player->getComponent<CTransformable>().speed.y = 0.f;
+	}
+
+	if (m_player->getComponent<CSprite>().right) {
+
+		m_player->getComponent<CSprite>().m_sprite.setScale(sf::Vector2f{ 2.f, 2.f });
+
+	}
+	else {
+
+		m_player->getComponent<CSprite>().m_sprite.setScale(sf::Vector2f{ -2.f, 2.f });
+
+
 	}
 
 	//speed on x side
@@ -130,6 +157,10 @@ void Level::updatePlayerSpeed()
 
 	if (m_player->getComponent<CInput>().RIGHT) {
 
+		m_player->getComponent<CSprite>().right = true;
+
+		m_player->getComponent<CSprite>().m_sprite.setScale(sf::Vector2f{ 2.f, 2.f });
+
 		p_speedX += 2.5f * deltaTime;
 		if (p_speedX > m_player->getComponent<CTransformable>().speedLimit) {
 			p_speedX = m_player->getComponent<CTransformable>().speedLimit;
@@ -138,6 +169,8 @@ void Level::updatePlayerSpeed()
 	}
 
 	if (m_player->getComponent<CInput>().LEFT) {
+
+		m_player->getComponent<CSprite>().right = false;
 
 		p_speedX += -2.5f * deltaTime ;
 
@@ -176,6 +209,9 @@ void Level::updatePlayerSpeed()
 	}
 	else if(!m_player->getComponent<CTransformable>().onGround){
 		p_speedY += 9.8f * deltaTime;
+		if (p_speedY > 1.5f) {
+			p_speedY = 1.5f;
+		}
 	}
 
 }
@@ -194,6 +230,7 @@ void Level::updatePlayerInput(Action action)
 	if (action.keyCode() == sf::Keyboard::W) {
 		m_player->getComponent<CInput>().UP = action.status();
 		
+		
 	}
 
 }
@@ -209,6 +246,10 @@ void Level::updateCollision()
 	bool left = false;
 
 	for (auto& e : m_entManager.getAllByTag(TAG::TILE)) {
+
+		auto& b_shape = m_player->getComponent<CBoundingBox>().b_shape;
+		m_player->getComponent<CBoundingBox>().center = sf::Vector2f{ b_shape.getPosition().x + b_shape.getGlobalBounds().width / 2,
+				b_shape.getPosition().y + b_shape.getGlobalBounds().height / 2 };
 
 		auto& ent_player = m_player->getComponent<CBoundingBox>().b_shape;
 
@@ -259,6 +300,7 @@ void Level::updateCollision()
 			sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y + ent_shape.getGlobalBounds().height };
 
 			m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+			m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center);
 
 			m_player->getComponent<CTransformable>().speed.y = 9.8 * deltaTime;
 
@@ -269,7 +311,11 @@ void Level::updateCollision()
 		else if (fall) {
 
 			sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y - ent_player.getGlobalBounds().height };
+
 			m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+			m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center.x, 
+				m_player->getComponent<CBoundingBox>().center.y - 5.f);
+
 			m_player->getComponent<CTransformable>().speed.y = 0.f;
 
 			m_player->getComponent<CTransformable>().onGround = true;
@@ -279,7 +325,10 @@ void Level::updateCollision()
 		else if (right && fall) {
 
 			sf::Vector2f newPos{ ent_player.getPosition().x, ent_shape.getPosition().y - ent_player.getGlobalBounds().height };
+
 			m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+			m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center);
+
 			m_player->getComponent<CTransformable>().speed.y = 0.f;
 
 			m_player->getComponent<CTransformable>().onGround = true;
@@ -291,6 +340,7 @@ void Level::updateCollision()
 			sf::Vector2f newPos{ ent_shape.getPosition().x - ent_player.getGlobalBounds().width, ent_player.getPosition().y};
 
 			m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+			m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center);
 
 			m_player->getComponent<CTransformable>().speed.x = 0;
 
@@ -301,6 +351,7 @@ void Level::updateCollision()
 			sf::Vector2f newPos{ ent_shape.getPosition().x + ent_shape.getGlobalBounds().width, ent_player.getPosition().y };
 
 			m_player->getComponent<CBoundingBox>().b_shape.setPosition(newPos);
+			m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center);
 
 			m_player->getComponent<CTransformable>().speed.x = 0;
 
@@ -337,6 +388,8 @@ void Level::sDoAction(Action action)
 
 	m_player->getComponent<CBoundingBox>().b_shape.move(m_player->getComponent<CTransformable>().speed);
 
+	m_player->getComponent<CSprite>().m_sprite.move(m_player->getComponent<CTransformable>().speed);
+
 }
 
 void Level::sRender(sf::RenderTarget& target)
@@ -370,7 +423,5 @@ void Level::update()
 		updateCollision();
 
 	}
-
-
 
 }

@@ -17,12 +17,17 @@ void GameEngine::initAssets()
 {
 	assets.addFont("MainMenu", "fonts/menu.ttf");
 	assets.addFont("Grid", "fonts/grid.ttf");
+
+	assets.addTexture("MarioIDLE", "textures/MarioIDLE.png");
+	assets.addTexture("Brick", "textures/Brick.png");
 }
 
 GameEngine::GameEngine()
 {
-	init();
 	initAssets();
+
+	init();
+	
 	m_running = true;
 }
 

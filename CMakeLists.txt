@@ -82,9 +82,10 @@ target_compile_features(Assigment3 PRIVATE cxx_std_17)
 set(FONT_FILE "${CMAKE_SOURCE_DIR}/src/assets/menu.ttf")
 
 # Copy font file to build dir
-add_custom_command(TARGET Assigment3 POST_BUILD
+add_custom_command(TARGET Assigment3
     # create directory in build dir
     COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:Assigment3>/fonts
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:Assigment3>/textures
     COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:Assigment3>/fonts
     COMMENT "Copying font file to output directory"
 )
@@ -92,9 +93,17 @@ add_custom_command(TARGET Assigment3 POST_BUILD
 # add grid font
 set(FONT_FILE "${CMAKE_SOURCE_DIR}/src/assets/grid.ttf")
 
-add_custom_command(TARGET Assigment3 POST_BUILD
+set(TEXTURES
+
+    "${CMAKE_SOURCE_DIR}/src/assets/textures/Brick.png"
+    "${CMAKE_SOURCE_DIR}/src/assets/textures/MarioIDLE.png"
+
+)
+
+add_custom_command(TARGET Assigment3 
     COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:Assigment3>/fonts
-    COMMENT "Copying font file to output directory"
+    COMMAND ${CMAKE_COMMAND} -E copy ${TEXTURES} $<TARGET_FILE_DIR:Assigment3>/textures
+    COMMENT "Copying font and texture file to output directory"
 )
 
 
