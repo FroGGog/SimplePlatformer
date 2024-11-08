@@ -15,12 +15,51 @@ void GameEngine::init()
 
 void GameEngine::initAssets()
 {
-	assets.addFont("MainMenu", "fonts/menu.ttf");
-	assets.addFont("Grid", "fonts/grid.ttf");
+	std::fstream asssetFile;
 
-	assets.addTexture("MarioIDLE", "textures/MarioIDLE.png");
-	assets.addTexture("Brick", "textures/Brick.png");
-	assets.addTexture("Bush1", "textures/Bush1.png");
+	asssetFile.open("configs/AssetsLoad.txt");
+
+	if (!asssetFile.is_open()) {
+		std::cerr << "ERROR::NOSUCHFILEINDIR::AssetsLoad.txt\n";
+		return;
+	}
+
+	std::string line;
+	std::string word;
+	std::stringstream ss{ " " };
+
+	std::vector<std::string> assetInfo;
+
+
+	while (!asssetFile.eof()) {
+
+		std::getline(asssetFile, line);
+
+		ss.str(line);
+
+		while (ss >> word) {
+
+			if (word == " ") {
+				continue;
+			}
+			assetInfo.push_back(word);
+			
+		}
+		ss.clear();
+	
+		if (assetInfo[0] == "Texture") {
+
+			assets.addTexture(assetInfo[1], assetInfo[2]);
+		}
+		else if (assetInfo[0] == "Font") {
+
+			assets.addFont(assetInfo[1], assetInfo[2]);
+
+		}
+
+		assetInfo.clear();
+
+	}
 }
 
 GameEngine::GameEngine()

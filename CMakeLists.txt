@@ -77,22 +77,24 @@ target_link_libraries(Assigment3 PRIVATE ImGui-SFML::ImGui-SFML)
 target_compile_features(Assigment3 PRIVATE cxx_std_17)
 
 
-# Main menu font
 # Dirs to font
-set(FONT_FILE "${CMAKE_SOURCE_DIR}/src/assets/menu.ttf")
+set(FONT_FILES
+
+    "${CMAKE_SOURCE_DIR}/src/assets/grid.ttf"
+    "${CMAKE_SOURCE_DIR}/src/assets/menu.ttf"
+
+)
 
 # Copy font file to build dir
 add_custom_command(TARGET Assigment3
     # create directory in build dir
     COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:Assigment3>/fonts
-    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:Assigment3>/textures
-    COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:Assigment3>/fonts
-    COMMENT "Copying font file to output directory"
+    COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILES} $<TARGET_FILE_DIR:Assigment3>/fonts
+    COMMENT "Copying font files to output directory"
 )
 
-# add grid font
-set(FONT_FILE "${CMAKE_SOURCE_DIR}/src/assets/grid.ttf")
 
+# Copy texture file to output directory
 set(TEXTURES
 
     "${CMAKE_SOURCE_DIR}/src/assets/textures/Brick.png"
@@ -103,11 +105,23 @@ set(TEXTURES
 )
 
 add_custom_command(TARGET Assigment3 
-    COMMAND ${CMAKE_COMMAND} -E copy ${FONT_FILE} $<TARGET_FILE_DIR:Assigment3>/fonts
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:Assigment3>/textures
     COMMAND ${CMAKE_COMMAND} -E copy ${TEXTURES} $<TARGET_FILE_DIR:Assigment3>/textures
-    COMMENT "Copying font and texture file to output directory"
+    COMMENT "Copying texture file to output directory"
 )
 
+# Config files
+set(CONFIGS
+
+    "${CMAKE_SOURCE_DIR}/src/AssetsLoad.txt"
+
+)
+
+add_custom_command(TARGET Assigment3 
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:Assigment3>/configs
+    COMMAND ${CMAKE_COMMAND} -E copy ${CONFIGS} $<TARGET_FILE_DIR:Assigment3>/configs
+    COMMENT "Copying config files to output directory"
+)
 
 
 if(WIN32)

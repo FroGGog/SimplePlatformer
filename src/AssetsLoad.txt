@@ -1,1 +1,5 @@
-Texture MarioIDLE "assets/textures/MarioIDLE.png"
+Texture MarioIDLE textures/MarioIDLE.png
+Texture Brick textures/Brick.png
+Texture Bush1 textures/Bush1.png
+Font MainMenu fonts/menu.ttf
+Font Grid fonts/grid.ttf

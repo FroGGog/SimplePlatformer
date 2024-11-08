@@ -2,6 +2,9 @@
 #include "MainMenuScene.h"
 #include "Assets.h"
 
+#include <fstream>
+#include <sstream>
+
 class GameEngine {
 
 private:
