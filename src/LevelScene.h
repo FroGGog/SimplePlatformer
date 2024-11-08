@@ -24,6 +24,9 @@ private:
 	void initLevel();
 	void initPlayer();
 
+	void initLevel1();
+	void initLevel2();
+
 	void renderGrid(sf::RenderTarget& target);
 	void renderLevel(sf::RenderTarget& target);
 	void renderPlayer(sf::RenderTarget& target);

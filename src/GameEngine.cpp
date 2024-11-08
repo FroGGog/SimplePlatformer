@@ -105,8 +105,7 @@ void GameEngine::ChangeScene(std::string sceneName)
 		m_win->setFramerateLimit(10);
 	}
 	else if (sceneName == "Level") {
-		std::cout << "Changed scene\n";
-		CurrentScene = std::make_shared<Level>("Level1", this, "/src");
+		CurrentScene = std::make_shared<Level>("LEVEL 1", this, "/src");
 		m_win->setFramerateLimit(60);
 	}
 }

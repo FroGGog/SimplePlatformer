@@ -69,6 +69,39 @@ void Level::initGrid()
 void Level::initLevel()
 {
 	// Level will be created using .txt file
+	if (m_scene_name == "LEVEL 1") {
+
+		initLevel1();
+	}
+	else if (m_scene_name == "LEVEL 2") {
+
+		initLevel2();
+	}
+
+
+}
+
+void Level::initPlayer()
+{
+	m_player = m_entManager.addEntity(TAG::PLAYER);
+
+	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 26.f, 26.f });
+	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * 3, 32.f * 8 });
+	m_player->getComponent<CBoundingBox>().updateCenter();
+	m_player->addComponent<CInput>();
+	m_player->addComponent<CTransformable>();
+	
+	m_player->getComponent<CTransformable>().speedLimit = 0.9f;
+	m_player->getComponent<CTransformable>().speed = sf::Vector2f{ 0.f,0.f };
+
+	m_player->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("MarioIDLE"), sf::Vector2f{ 2.f, 2.f });
+	m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center.x,
+		m_player->getComponent<CBoundingBox>().center.y - 1.f);
+	
+}
+
+void Level::initLevel1()
+{
 
 	for (int j{ 0 }; j < 2; j++) {
 
@@ -110,28 +143,13 @@ void Level::initLevel()
 
 	ent->getComponent<CSprite>().m_sprite.setOrigin(sf::Vector2f{ ent->getComponent<CSprite>().m_sprite.getPosition().x,
 		ent->getComponent<CSprite>().m_sprite.getPosition().y + ent->getComponent<CSprite>().m_sprite.getGlobalBounds().height });
-	ent->getComponent<CSprite>().m_sprite.setPosition(sf::Vector2f{32.f * 7, 32.f * 20.f + 5.f});
-
+	ent->getComponent<CSprite>().m_sprite.setPosition(sf::Vector2f{ 32.f * 7, 32.f * 20.f + 5.f });
 
 }
 
-void Level::initPlayer()
+void Level::initLevel2()
 {
-	m_player = m_entManager.addEntity(TAG::PLAYER);
 
-	m_player->addComponent<CBoundingBox>(sf::Vector2f{ 26.f, 26.f });
-	m_player->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * 3, 32.f * 8 });
-	m_player->getComponent<CBoundingBox>().updateCenter();
-	m_player->addComponent<CInput>();
-	m_player->addComponent<CTransformable>();
-	
-	m_player->getComponent<CTransformable>().speedLimit = 0.9f;
-	m_player->getComponent<CTransformable>().speed = sf::Vector2f{ 0.f,0.f };
-
-	m_player->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("MarioIDLE"), sf::Vector2f{ 2.f, 2.f });
-	m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center.x,
-		m_player->getComponent<CBoundingBox>().center.y - 1.f);
-	
 }
 
 void Level::renderGrid(sf::RenderTarget& target)
