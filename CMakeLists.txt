@@ -99,6 +99,11 @@ set(TEXTURES
 
     "${CMAKE_SOURCE_DIR}/src/assets/textures/Brick.png"
     "${CMAKE_SOURCE_DIR}/src/assets/textures/Bush1.png"
+    "${CMAKE_SOURCE_DIR}/src/assets/textures/Bush2.png"
+    "${CMAKE_SOURCE_DIR}/src/assets/textures/PipeBL.png"
+    "${CMAKE_SOURCE_DIR}/src/assets/textures/PipeBR.png"
+    "${CMAKE_SOURCE_DIR}/src/assets/textures/PipeUL.png"
+    "${CMAKE_SOURCE_DIR}/src/assets/textures/PipeUR.png"
 
     "${CMAKE_SOURCE_DIR}/src/assets/textures/MarioIDLE.png"
 

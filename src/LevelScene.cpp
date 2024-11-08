@@ -28,6 +28,7 @@ void Level::regInputs()
 void Level::init()
 {
 	showGrid = false;
+	showCBoxes = false;
 	deltaTime = 1.f / 60.f;
 
 	regInputs();
@@ -107,16 +108,7 @@ void Level::initLevel1()
 
 		for (int i{ 0 }; i < 32; i++) {
 
-			auto ent = m_entManager.addEntity(TAG::TILE);
-
-			ent->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
-			ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("Brick"), sf::Vector2f{ 2.f,2.f });
-
-			ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * i, 32.f * (18.f + (float)j) });
-
-			ent->getComponent<CBoundingBox>().updateCenter();
-
-			ent->getComponent<CSprite>().m_sprite.setPosition(ent->getComponent<CBoundingBox>().center.x, ent->getComponent<CBoundingBox>().center.y - 1.f);
+			addTile("Brick", sf::Vector2f{ 32.f * i, 32.f * (18.f + (float)j) });
 
 		}
 
@@ -124,26 +116,21 @@ void Level::initLevel1()
 
 	for (int i{ 0 }; i < 6; i++) {
 
-		auto ent = m_entManager.addEntity(TAG::TILE);
-
-		ent->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
-		ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("Brick"), sf::Vector2f{ 2.f,2.f });
-
-		ent->getComponent<CBoundingBox>().b_shape.setPosition(sf::Vector2f{ 32.f * (i + 2), 32.f * 15.f });
-
-		ent->getComponent<CBoundingBox>().updateCenter();
-
-		ent->getComponent<CSprite>().m_sprite.setPosition(ent->getComponent<CBoundingBox>().center.x, ent->getComponent<CBoundingBox>().center.y - 1.f);
+		addTile("Brick", sf::Vector2f{ 32.f * i, 32.f * 15.f });
 
 	}
 
-	auto ent = m_entManager.addEntity(TAG::BACK_TILE);
+	//pipes
+	addPipe(3, sf::Vector2f{ 32.f * 15.f, 32.f * 18.f });
+	addPipe(2, sf::Vector2f{ 32.f * 12.f, 32.f * 18.f });
 
-	ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("Bush1"), sf::Vector2f{ 2.f,2.f });
+	//add background tiles
+	addBackTile("Bush1", sf::Vector2f{ 32.f * 7.f, 32.f * 20.f + 5.f });
+	addBackTile("Bush1", sf::Vector2f{ 32.f * 15.f, 32.f * 20.f + 5.f });
+	addBackTile("Bush2", sf::Vector2f{ 32.f * 2.f, 32.f * 19.f });
+	addBackTile("Bush2", sf::Vector2f{ 32.f * 25.f, 32.f * 19.f });
 
-	ent->getComponent<CSprite>().m_sprite.setOrigin(sf::Vector2f{ ent->getComponent<CSprite>().m_sprite.getPosition().x,
-		ent->getComponent<CSprite>().m_sprite.getPosition().y + ent->getComponent<CSprite>().m_sprite.getGlobalBounds().height });
-	ent->getComponent<CSprite>().m_sprite.setPosition(sf::Vector2f{ 32.f * 7, 32.f * 20.f + 5.f });
+
 
 }
 
@@ -151,6 +138,56 @@ void Level::initLevel2()
 {
 
 }
+
+void Level::addBackTile(std::string texName, sf::Vector2f pos)
+{
+	auto ent = m_entManager.addEntity(TAG::BACK_TILE);
+
+	ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture(texName), sf::Vector2f{ 2.f,2.f });
+
+	ent->getComponent<CSprite>().m_sprite.setOrigin(sf::Vector2f{ ent->getComponent<CSprite>().m_sprite.getPosition().x,
+		ent->getComponent<CSprite>().m_sprite.getPosition().y + ent->getComponent<CSprite>().m_sprite.getGlobalBounds().height });
+	ent->getComponent<CSprite>().m_sprite.setPosition(pos);
+}
+
+void Level::addTile(std::string texName, sf::Vector2f pos)
+{
+	auto ent = m_entManager.addEntity(TAG::TILE);
+
+	ent->addComponent<CBoundingBox>(sf::Vector2f{ 32.f, 32.f });
+	ent->addComponent<CSprite>(m_gameEngine->getAssets().getTexture(texName), sf::Vector2f{ 2.f,2.f });
+
+	ent->getComponent<CBoundingBox>().b_shape.setPosition(pos);
+
+	ent->getComponent<CBoundingBox>().updateCenter();
+
+	ent->getComponent<CSprite>().m_sprite.setPosition(ent->getComponent<CBoundingBox>().center.x,
+		ent->getComponent<CBoundingBox>().center.y - 1.f);
+}
+
+void Level::addPipe(int lenght, sf::Vector2f l_pos)
+{
+	int l_lenght = lenght;
+	for (int i{ l_lenght }; i > 0; i--) {
+
+		addTile("PipeBL", sf::Vector2f{l_pos.x, l_pos.y - i * 32.f });
+		addTile("PipeBR", sf::Vector2f{ l_pos.x + 32.f, l_pos.y - i * 32.f});
+
+		if ((i - 1) <= 0) {
+
+			addTile("PipeUL", sf::Vector2f{ l_pos.x, l_pos.y - (32 * (l_lenght + 1.f)) });
+			addTile("PipeUR", sf::Vector2f{	l_pos.x + 32.f, l_pos.y - (32 * (l_lenght + 1.f)) });
+		}
+	}
+}
+//
+//addTile("PipeBL", sf::Vector2f{ 32.f * 15, 32.f * (18.f - i) });
+//addTile("PipeBR", sf::Vector2f{ 32.f * 16, 32.f * (18.f - i) });
+//
+//if ((i - 1) <= 0) {
+//
+//	addTile("PipeUL", sf::Vector2f{ 32.f * 15, 32.f * (18.f - l_lenght - 1.f) });
+//	addTile("PipeUR", sf::Vector2f{ 32.f * 16, 32.f * (18.f - l_lenght - 1.f) });
 
 void Level::renderGrid(sf::RenderTarget& target)
 {
@@ -162,22 +199,27 @@ void Level::renderGrid(sf::RenderTarget& target)
 
 void Level::renderLevel(sf::RenderTarget& target)
 {
-	for (auto& ent : m_entManager.getAllByTag(TAG::TILE)) {
-
-		target.draw(ent->getComponent<CBoundingBox>().b_shape);
-		target.draw(ent->getComponent<CSprite>().m_sprite);
-	}
-
 	for (auto& ent : m_entManager.getAllByTag(TAG::BACK_TILE)) {
 
 		target.draw(ent->getComponent<CSprite>().m_sprite);
 
 	}
+
+	for (auto& ent : m_entManager.getAllByTag(TAG::TILE)) {
+
+		if (showCBoxes) {
+			target.draw(ent->getComponent<CBoundingBox>().b_shape);
+		}
+		
+		target.draw(ent->getComponent<CSprite>().m_sprite);
+	}
 }
 
 void Level::renderPlayer(sf::RenderTarget& target)
 {
-	target.draw(m_player->getComponent<CBoundingBox>().b_shape);
+	if (showCBoxes) {
+		target.draw(m_player->getComponent<CBoundingBox>().b_shape);
+	}
 	target.draw(m_player->getComponent<CSprite>().m_sprite);
 }
 
@@ -340,7 +382,9 @@ void Level::updateCollision()
 					
 		}
 
-		
+		if (jump && left) {
+			continue;
+		}
 
 		if (jump) {
 
@@ -430,6 +474,12 @@ void Level::sDoAction(Action action)
 		showGrid = !showGrid;
 	}
 
+	if (action.keyCode() == sf::Keyboard::C && action.status()) {
+
+		showCBoxes = !showCBoxes;
+
+	}
+
 	updatePlayerInput(action);
 	
 
@@ -459,7 +509,7 @@ void Level::update()
 			return;
 		}
 		sDoAction(action);
-		if (action.keyCode() == sf::Keyboard::G) {
+		if (action.keyCode() == sf::Keyboard::G || action.keyCode() == sf::Keyboard::C) {
 
 			action.setStatus(false);
 		}

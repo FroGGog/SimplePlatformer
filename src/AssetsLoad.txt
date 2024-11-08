@@ -1,5 +1,10 @@
 Texture MarioIDLE textures/MarioIDLE.png
 Texture Brick textures/Brick.png
 Texture Bush1 textures/Bush1.png
+Texture Bush2 textures/Bush2.png
+Texture PipeBL textures/PipeBL.png
+Texture PipeBR textures/PipeBR.png
+Texture PipeUL textures/PipeUL.png
+Texture PipeUR textures/PipeUR.png
 Font MainMenu fonts/menu.ttf
 Font Grid fonts/grid.ttf

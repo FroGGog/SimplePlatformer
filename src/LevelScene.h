@@ -15,6 +15,7 @@ private:
 	std::shared_ptr<Entity> m_player;
 
 	bool showGrid;
+	bool showCBoxes;
 	float deltaTime;
 
 	void regInputs();
@@ -26,6 +27,9 @@ private:
 
 	void initLevel1();
 	void initLevel2();
+	void addBackTile(std::string texName, sf::Vector2f pos);
+	void addTile(std::string texName, sf::Vector2f pos);
+	void addPipe(int lenght, sf::Vector2f l_pos);
 
 	void renderGrid(sf::RenderTarget& target);
 	void renderLevel(sf::RenderTarget& target);
