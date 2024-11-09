@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "GameEngine.h"
 #include "Physics.h"
+#include "Animation.h"
 
 // all Level based stuff
 Level::Level(const std::string name, GameEngine* gameEngine, const std::string fileName)
@@ -95,9 +96,11 @@ void Level::initPlayer()
 	m_player->getComponent<CTransformable>().speedLimit = 0.9f;
 	m_player->getComponent<CTransformable>().speed = sf::Vector2f{ 0.f,0.f };
 
-	m_player->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("MarioIDLE"), sf::Vector2f{ 2.f, 2.f });
+	m_player->addComponent<CSprite>(m_gameEngine->getAssets().getTexture("MarioRun"), sf::Vector2f{ 2.f, 2.f });
 	m_player->getComponent<CSprite>().m_sprite.setPosition(m_player->getComponent<CBoundingBox>().center.x,
 		m_player->getComponent<CBoundingBox>().center.y - 1.f);
+
+	anim = std::make_shared<Animation>(m_gameEngine->getAssets().getTexture("MarioRun"), 0.001f, 3.f);
 	
 }
 
@@ -180,14 +183,6 @@ void Level::addPipe(int lenght, sf::Vector2f l_pos)
 		}
 	}
 }
-//
-//addTile("PipeBL", sf::Vector2f{ 32.f * 15, 32.f * (18.f - i) });
-//addTile("PipeBR", sf::Vector2f{ 32.f * 16, 32.f * (18.f - i) });
-//
-//if ((i - 1) <= 0) {
-//
-//	addTile("PipeUL", sf::Vector2f{ 32.f * 15, 32.f * (18.f - l_lenght - 1.f) });
-//	addTile("PipeUR", sf::Vector2f{ 32.f * 16, 32.f * (18.f - l_lenght - 1.f) });
 
 void Level::renderGrid(sf::RenderTarget& target)
 {
@@ -238,7 +233,6 @@ void Level::updatePlayerSpeed()
 
 		m_player->getComponent<CSprite>().m_sprite.setScale(sf::Vector2f{ -2.f, 2.f });
 
-
 	}
 
 	//speed on x side
@@ -250,6 +244,8 @@ void Level::updatePlayerSpeed()
 
 		m_player->getComponent<CSprite>().right = true;
 
+		m_player->getComponent<CSprite>().m_sprite.setTextureRect(anim->getAnimRect());
+
 		m_player->getComponent<CSprite>().m_sprite.setScale(sf::Vector2f{ 2.f, 2.f });
 
 		p_speedX += 2.5f * deltaTime;
@@ -259,9 +255,11 @@ void Level::updatePlayerSpeed()
 
 	}
 
-	if (m_player->getComponent<CInput>().LEFT) {
+	else if (m_player->getComponent<CInput>().LEFT) {
 
 		m_player->getComponent<CSprite>().right = false;
+
+		m_player->getComponent<CSprite>().m_sprite.setTextureRect(anim->getAnimRect());
 
 		p_speedX += -2.5f * deltaTime ;
 
@@ -272,7 +270,12 @@ void Level::updatePlayerSpeed()
 
 	}
 
+
+
 	else {
+
+		
+
 		if (p_speedX > 0) {
 			p_speedX -= 1.f * deltaTime;
 			if (p_speedX <= 0) {
@@ -289,6 +292,10 @@ void Level::updatePlayerSpeed()
 
 		}
 
+	}
+
+	if (p_speedX == 0) {
+		m_player->getComponent<CSprite>().m_sprite.setTexture(m_gameEngine->getAssets().getTexture("MarioIDLE"));
 	}
 
 	// update gravity
@@ -522,6 +529,7 @@ void Level::update()
 
 		updateCollision();
 
+		
 	}
-
+	anim->update();
 }

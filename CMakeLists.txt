@@ -68,6 +68,9 @@ set(SOURCE_FILES
     "src/Physics.h"
     "src/Physics.cpp"
 
+    "src/Animation.h"
+    "src/Animation.cpp"
+
 )
 
 
@@ -106,6 +109,7 @@ set(TEXTURES
     "${CMAKE_SOURCE_DIR}/src/assets/textures/PipeUR.png"
 
     "${CMAKE_SOURCE_DIR}/src/assets/textures/MarioIDLE.png"
+    "${CMAKE_SOURCE_DIR}/src/assets/animations/MarioRun.png"
 
 )
 

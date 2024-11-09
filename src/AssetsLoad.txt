@@ -6,5 +6,6 @@ Texture PipeBL textures/PipeBL.png
 Texture PipeBR textures/PipeBR.png
 Texture PipeUL textures/PipeUL.png
 Texture PipeUR textures/PipeUR.png
+Texture MarioRun textures/MarioRun.png
 Font MainMenu fonts/menu.ttf
 Font Grid fonts/grid.ttf

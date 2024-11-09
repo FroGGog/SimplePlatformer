@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "Animation.h"
 
 class GameEngine;
 
@@ -13,6 +14,8 @@ private:
 	std::string m_fileName;
 
 	std::shared_ptr<Entity> m_player;
+
+	std::shared_ptr<Animation> anim;
 
 	bool showGrid;
 	bool showCBoxes;
